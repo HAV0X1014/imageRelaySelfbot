@@ -24,6 +24,7 @@ def main():
 
     @dc.event
     async def on_message(message):
+        attachmentURL = None
         guild_id = message.guild.id
         if guild_id not in LISTEN_GUILD_IDS:
             return
@@ -36,14 +37,19 @@ def main():
         if author_id == BOT_ID:
             return
 
-        if not message.attachments:
+        if "http" in message.content:                               #also relay HTTP links, like links to pixiv or twitter
+            attachmentURL = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', message.content)
+
+        if message.attachments:
+            attachmentUnformatted = message.attachments             #get the message's attachment, it is not returned as a string
+            attachmentLastSplit = re.split(r".*url='", str(attachmentUnformatted))[1]       #split it at the URL part and also cast it to a string
+            attachmentURL = attachmentLastSplit[: len (attachmentLastSplit) - 3]            #remove the last three characters and assign it to the final variable
+
+        if attachmentURL is None:                                   #prevent red shouty text on normal messages without attachments or HTTP in it
             return
-        attachmentUnformatted = message.attachments                 #get the message's attachment, it is not returned as a string
-        attachmentLastSplit = re.split(r".*url='", str(attachmentUnformatted))[1]       #split it at the URL part and also cast it to a string
-        attachmentURL = attachmentLastSplit[: len (attachmentLastSplit) - 3]            #remove the last three characters and assign it to the final variable
 
-        msg_to_send = f"[{str(message.guild.name).upper()}] {message.author.name}:\t{attachmentURL}"
-
+        msg_to_send = f"⁣[{str(message.guild.name).upper()}] {message.author.name}:\t{attachmentURL}"
+        
         for i in range(0, len(WEBHOOK_URL)):                        #iterate through the webhook URLs in case you want to send to multiple places
             webhook = DiscordWebhook(url=WEBHOOK_URL[i], username='Unify', content=msg_to_send)
             webhook.execute()
