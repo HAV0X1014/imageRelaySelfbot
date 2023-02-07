@@ -18,6 +18,7 @@ LISTEN_CHANNEL_IDS = channelids
 def main():
     dc = selfcord.Client()
 
+
     @dc.event
     async def on_ready():
         print(f"Listening User: {dc.user}")
@@ -38,7 +39,10 @@ def main():
             return
 
         if "http" in message.content:                               #also relay HTTP links, like links to pixiv or twitter
-            attachmentURL = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', message.content)
+            attachmentList = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', message.content)
+            attachmentUnformatted = ' '.join([str(elem) for elem in attachmentList])        #cast the list it returns to a string
+            attachmentFormat1 = attachmentUnformatted.strip("['")          #remove those things that break embeds
+            attachmentURL = attachmentFormat1.strip("']")                 #remove those again
 
         if message.attachments:
             attachmentUnformatted = message.attachments             #get the message's attachment, it is not returned as a string
@@ -49,9 +53,9 @@ def main():
             return
 
         msg_to_send = f"⁣[{str(message.guild.name).upper()}] {message.author.name}:\t{attachmentURL}"
-        
+
         for i in range(0, len(WEBHOOK_URL)):                        #iterate through the webhook URLs in case you want to send to multiple places
-            webhook = DiscordWebhook(url=WEBHOOK_URL[i], username='Unify', content=msg_to_send)
+            webhook = DiscordWebhook(url=WEBHOOK_URL[i], username='KF Unify', content=msg_to_send)
             webhook.execute()
 
     dc.run(DISCORD_USER_TOKEN)
