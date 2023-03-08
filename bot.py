@@ -43,19 +43,20 @@ def main():
             attachmentUnformatted = ' '.join([str(elem) for elem in attachmentList])        #cast the list it returns to a string
             attachmentFormat1 = attachmentUnformatted.strip("['")          #remove those things that break embeds
             attachmentURL = attachmentFormat1.strip("']")                 #remove those again
-
-        if message.attachments:
+            
+       if message.attachments:
             attachmentUnformatted = message.attachments             #get the message's attachment, it is not returned as a string
-            attachmentLastSplit = re.split(r".*url='", str(attachmentUnformatted))[1]       #split it at the URL part and also cast it to a string
-            attachmentURL = attachmentLastSplit[: len (attachmentLastSplit) - 3]            #remove the last three characters and assign it to the final variable
-
+            attachmentsOnly = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[/\-_@.&+]|[!*\(\),])+', str(attachmentUnformatted))       #only get the URLs
+            attachmentLastSplit = (' '.join(attachmentsOnly))       #make the displayed attachment URLs separated with a single space so they embed
+            attachmentURL = attachmentLastSplit                     #assign it to the final variable
+        
         if attachmentURL is None:                                   #prevent red shouty text on normal messages without attachments or HTTP in it
             return
 
         msg_to_send = f"⁣[{str(message.guild.name).upper()}] {message.author.name}:\t{attachmentURL}"
 
         for i in range(0, len(WEBHOOK_URL)):                        #iterate through the webhook URLs in case you want to send to multiple places
-            webhook = DiscordWebhook(url=WEBHOOK_URL[i], username='KF Unify', content=msg_to_send)
+            webhook = DiscordWebhook(url=WEBHOOK_URL[i], username='Unify', content=msg_to_send)
             webhook.execute()
 
     dc.run(DISCORD_USER_TOKEN)
