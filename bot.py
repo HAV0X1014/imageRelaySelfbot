@@ -1,5 +1,6 @@
 import selfcord
 import linecache
+import re
 from discord_webhook import DiscordWebhook
 
 #put the server and channel IDs here, preferably above the channel you want to listen to.
