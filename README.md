@@ -17,3 +17,7 @@ It will relay any links, as well as any uploaded files to the webhook(s) of your
 If you want to relay one channel to multiple webhooks, separate the webhooks with a comma and a space -> `, ` and put it on the same line.
 
 Example: `https://discordapp.com/3817418, https://discordapp.com/329471, https://discordapp.com/01298541`
+
+The bot to relay ALL messages sent in a channel is [here](https://github.com/HAV0X1014/imageRelaySelfbot/tree/fullRelayer).
+
+Discord is killing access to information that should be public.
