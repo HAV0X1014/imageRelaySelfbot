@@ -1,1 +1,1 @@
-Put the server IDs of the channels you want to listen to.
+Put the server IDs of the channels you want to listen to. THIS IS THE FULL RELAY BOT.
