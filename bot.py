@@ -1,4 +1,4 @@
-import selfcord
+import discord as selfcord
 import linecache
 import re
 from discord_webhook import DiscordWebhook
